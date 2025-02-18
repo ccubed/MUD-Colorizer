@@ -5,166 +5,116 @@
     <!-- If you're reading this, you might like this tool, but it would be NICE if you could credit me somehow. Demon, Despair, Asmodeus, or Jeff. https://www.github.com/coffee-nerd/   Please leave this line in the code. Preferably we can collaborate and you can just make a pull request.  -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>MUD Colorizer</title>
-    <style>
-      body {
-        background-color: black;
-        color: white;
-        font-family: "Courier New", monospace;
-        padding: 20px;
-      }
-      #output {
-        white-space: pre-wrap;
-        margin-top: 20px;
-        border: 1px solid #444;
-        padding: 10px;
-        background-color: #111;
-      }
-      #controls {
-        margin-bottom: 20px;
-      }
-      label {
-        color: white;
-        font-size: 1rem;
-        margin-right: 10px;
-      }
-      textarea {
-        width: 100%;
-        height: 150px;
-        background-color: #111;
-        color: white;
-        border: 1px solid #444;
-        padding: 10px;
-        font-family: inherit;
-        resize: vertical;
-      }
-      select {
-        background-color: #111;
-        color: white;
-        border: 1px solid #444;
-        padding: 5px;
-        font-family: inherit;
-        margin-right: 10px;
-      }
-      .preview-box {
-        display: inline-block;
-        vertical-align: middle;
-        width: 100px;
-        height: 20px;
-        margin-left: 10px;
-        border: 1px solid #444;
-        background: black;
-      }
-      .mode-selector {
-        margin-bottom: 20px;
-      }
-      .mode-selector input {
-        margin-right: 5px;
-      }
-      .disabled {
-        opacity: 0.5;
-        pointer-events: none;
-      }
-      input:invalid {
-        background-color: lightpink;
-      }
-    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.amber.min.css" >
   </head>
-  <body>
-    <h1 style="color: white">MUD Colorizer</h1>
-    <div id="controls">
-      <!-- Mode Selection -->
-      <div class="mode-selector">
-        <label>Select Mode:</label>
-        <input type="radio" id="editMode" name="mode" value="edit" checked />
-        <label for="editMode">Edit Mode</label>
-        <input
-          type="radio"
-          id="viewMode"
-          name="mode"
-          value="view"
-          style="margin-left: 20px"
-        />
-        <label for="viewMode">Viewer Mode</label>
-      </div>
+  <body class="container">
+    <header class="container" style="text-align:center;">
+      <h1>MUD Colorizer</h1>
+      <button id="editModeToggle" aria-current="true">Edit Mode</button>
+      <button id="viewModeToggle">View Mode</button>
+    </header>
 
-      <!-- Font Selection -->
-      <div>
-        <label for="fontSelector">Select Font:</label>
-        <select id="fontSelector">
-          <option value="'Courier New', monospace">Courier New</option>
-          <option value="'Fira Code', monospace">Fira Code</option>
-          <option value="'Hack', monospace">Hack</option>
-          <option value="'JetBrains Mono', monospace">JetBrains Mono</option>
-          <option value="'Roboto Mono', monospace">Roboto Mono</option>
-          <option value="'Source Code Pro', monospace">Source Code Pro</option>
-          <option value="'Ubuntu Mono', monospace">Ubuntu Mono</option>
-          <option value="'Monaco', monospace">Monaco</option>
-          <option value="'Consolas', monospace">Consolas</option>
-          <option value="'Anonymous Pro', monospace">Anonymous Pro</option>
-        </select>
-      </div>
-      <br />
+    <main>
+      <article>
+          <!-- Font Selection -->
+          <div class="grid">
+            <div role="group">
+              <label>Font
+              <select id="fontSelector">
+                <option value="'Courier New', monospace">Courier New</option>
+                <option value="'Fira Code', monospace">Fira Code</option>
+                <option value="'Hack', monospace">Hack</option>
+                <option value="'JetBrains Mono', monospace">JetBrains Mono</option>
+                <option value="'Roboto Mono', monospace">Roboto Mono</option>
+                <option value="'Source Code Pro', monospace">Source Code Pro</option>
+                <option value="'Ubuntu Mono', monospace">Ubuntu Mono</option>
+                <option value="'Monaco', monospace">Monaco</option>
+                <option value="'Consolas', monospace">Consolas</option>
+                <option value="'Anonymous Pro', monospace">Anonymous Pro</option>
+              </select>
+              </label>
+            </div>
 
-      <!-- Code Format Selection -->
-      <div>
-        <label for="formatSelector">Color Codes:</label>
-        <select id="formatSelector">
-          <option value="@x">Xterm: @xNNN</option>
-          <option value="{x">Xterm: {xNNN</option>
-          <option value="$x">Xterm: $xNNN</option>
-          <option value="@[F">Xterm F-colors: @[FNNN]</option>
-          <option value="^[F">Xterm F-colors: ^[FNNN]</option>
-          <option value="\t">Xterm Builder F-colors: \t[FNNN]</option>
-          <option value="&amp;">Xterm: &amp;NNN</option>
-        </select>
-      </div>
-      <br />
+            <!-- Code Format Selection -->
+            <div role="group">
+              <label>Color Code Format
+              <select id="formatSelector">
+                <option value="@x">Xterm: @xNNN</option>
+                <option value="{x">Xterm: {xNNN</option>
+                <option value="$x">Xterm: $xNNN</option>
+                <option value="@[F">Xterm F-colors: @[FNNN]</option>
+                <option value="^[F">Xterm F-colors: ^[FNNN]</option>
+                <option value="\t">Xterm Builder F-colors: \t[FNNN]</option>
+                <option value="&amp;">Xterm: &amp;NNN</option>
+              </select>
+              </label>
+            </div>
+          </div>
+      </article>
 
       <!-- Text Input -->
-      <label for="textInput">Paste Your Text:</label><br />
-      <textarea id="textInput" placeholder="Paste your text here..."></textarea>
-      <br /><br />
+      <article>
+        <label>Text to Format
+        <textarea id="textInput" placeholder="Paste your text here..." data-codedText=""></textarea>
+        </label>
+      </article>
 
       <!-- Gradient Selection -->
-      <div id="gradientControls">
-        <div>
-          <label for="gradientSelect">Select Gradient:</label>
-          <select id="gradientSelect"></select>
-          <span class="preview-box" id="gradientPreview"></span>
-          &nbsp;&nbsp;
-          <input type="checkbox" id="invertGradient" />
-          <label for="invertGradient">Invert</label>
-        </div>
-        <br />
-
-        <!-- Add New Gradients -->
-        <div id="addGradient">
-          <div>
-            <label>Add New Gradient:</label>
-            <label for="newGradientName">Name</label>
-            <input type="text" id="newGradientName" placeholder="My Gradient" required pattern="\w+"/>
-            &nbsp;|&nbsp;
-            <label for="newGradientCodes">Color Codes</label>
-            <input type="text" id="newGradientCodes" placeholder="120 16 220 161" required pattern="^(?:[0-9]{1,3}(?!\S)\s{0,1})+$" />
-            <input type="button" id="newGradientProcess" value="Add" />
+      <article>
+        <div class="grid">
+          <div class="group">
+            <label>Select Gradient
+            <select id="gradientSelect"></select>
+            </label>
+          </div>
+          <div class="group">
+            <label>Gradient Preview and Options</label>
+            <div class="preview-box" id="gradientPreview" style="display:block;width:95%;height:20%;"></div>
+            <label>
+              <input type="checkbox" id="invertGradient" />
+              Invert
+            </label>
           </div>
         </div>
-        <br />
+      </article>
 
-        <!-- Pattern Selection -->
-        <div>
-          <label for="patternSelect">Pattern:</label>
+        <!-- Add New Gradients -->
+      <article>
+        <div class="grid">
+          <div class="group">
+            <fieldset>
+              <input type="text" id="newGradientName" placeholder="Gradient Name" required pattern="\w+" aria-describedby="ngnHelper"/>
+              <small id="ngnHelper">Name must consist of whitespace and letters only.</small>
+            </fieldset>
+          </div>
+          <div class="group">
+            <fieldset>
+              <input type="text" id="newGradientCodes" placeholder="Gradient Color Codes" required pattern="^(?:[0-9]{1,3}(?!\S)\s{0,1})+$" aria-describedby="ngcHelper"/>
+              <small id="ngcHelper">Please enter a space separated list of numbers between 0 and 255.</small>
+            </fieldset>
+          </div>
+          <input type="submit" id="newGradientProcess" value="Add New Gradient" />
+          </div>
+        </div>
+      </article>
+
+      <article>
+        <div class="group">
+          <label>Pattern
           <select id="patternSelect">
             <option value="original">Original</option>
             <option value="distributed">Distributed</option>
             <option value="symmetrical">Symmetrical</option>
           </select>
+          </label>
         </div>
+        <section>
+          <div id="output"></div>
+        </section>
+      </article>
 
-      </div>
-    </div>
-
-    <div id="output"></div>
+      </section>
+    </main>
 
     <script>
       // Standard 16 color mapping
@@ -1111,6 +1061,31 @@ function renderXterm(text) {
       document
         .getElementById("newGradientProcess")
         .addEventListener("click", addGradientClick);
+      document
+        .getElementById("newGradientName")
+        .addEventListener("input", (event) => {
+          const inputElement = document.getElementById("newGradientName");
+          if (inputElement.validity.valid) {
+            inputElement.ariaInvalid = false;
+            document.getElementById("ngnHelper").textContent = "Looks good!";
+          } else {
+            inputElement.ariaInvalid = true;
+            document.getElementById("ngnHelper").textContent = "Name must consist of whitespace and letters only.";
+          }
+        })
+
+      document
+        .getElementById("newGradientCodes")
+        .addEventListener("input", (event) => {
+          const inputElement = document.getElementById("newGradientCodes");
+          if (inputElement.validity.valid) {
+            inputElement.ariaInvalid = false;
+            document.getElementById("ngcHelper").textContent = "Looks good!";
+          } else {
+            inputElement.ariaInvalid = true;
+            document.getElementById("ngcHelper").textContent = "Please enter a space separated list of numbers between 0 and 255.";
+          }
+        })
 
       initialize();
     </script>
